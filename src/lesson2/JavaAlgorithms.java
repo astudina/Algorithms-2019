@@ -5,6 +5,8 @@ import kotlin.Pair;
 
 import java.util.Set;
 
+import static java.lang.Math.sqrt;
+
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
     /**
@@ -84,8 +86,12 @@ public class JavaAlgorithms {
      * Общий комментарий: решение из Википедии для этой задачи принимается,
      * но приветствуется попытка решить её самостоятельно.
      */
+    // О(n)
     static public int josephTask(int menNumber, int choiceInterval) {
-        throw new NotImplementedError();
+        int result = 0;
+        for (int i = 1; i <= menNumber; i++)
+            result = (result + choiceInterval) % i;
+        return result + 1;
     }
 
     /**
@@ -99,8 +105,25 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+    // Трудоемкость и ресурсонмкость - 0(n * m)
+    static public String longestCommonSubstring(String first, String second) {
+        int maxSubLength = 0;
+        String result = "";
+        int[][] a = new int[first.length()][second.length()];
+        for (int i = 0; i < first.length(); i++) {
+            for (int j = 0; j < second.length(); j++) {
+                if (first.charAt(i) != second.charAt(j))
+                    continue;
+                if (i == 0 || j == 0)
+                    a[i][j] = 1;
+                else a[i][j] = a[i - 1][j - 1] + 1;
+                if (a[i][j] > maxSubLength) {
+                    maxSubLength = a[i][j];
+                    result = first.substring((i - maxSubLength + 1), i + 1);
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -113,9 +136,28 @@ public class JavaAlgorithms {
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
      */
+    //
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        int result = 0;
+        for (int i = 1; i < limit; i++) {
+            if (isPrime(i))
+                result++;
+        }
+        return result;
     }
+
+    private static boolean isPrime(int number) {
+        if (number % 2 == 0) return false;
+        for (int i = 3; i <= sqrt(number); i = +2) {
+            if (number % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 
     /**
      * Балда
