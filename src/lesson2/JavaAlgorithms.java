@@ -86,7 +86,7 @@ public class JavaAlgorithms {
      * Общий комментарий: решение из Википедии для этой задачи принимается,
      * но приветствуется попытка решить её самостоятельно.
      */
-    // О(n)
+    // Трудоемкость - О(n), ресурсоемкость - О(1)
     static public int josephTask(int menNumber, int choiceInterval) {
         int result = 0;
         for (int i = 1; i <= menNumber; i++)
@@ -105,7 +105,7 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    // Трудоемкость и ресурсонмкость - 0(n * m)
+    // Трудоемкость и ресурсоемкость - 0(n * m)
     static public String longestCommonSubstring(String first, String second) {
         int maxSubLength = 0;
         String result = "";
@@ -136,7 +136,7 @@ public class JavaAlgorithms {
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
      */
-    //
+    // Ресурсоемкость - О(1), трудоемкость - О(n)
     static public int calcPrimesNumber(int limit) {
         int result = 0;
         for (int i = 1; i < limit; i++) {
