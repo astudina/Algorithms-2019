@@ -72,10 +72,42 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Удаление элемента в дереве
      * Средняя
      */
+    // Трудоемкость - O(h) (здесь и далее h - высота дерева), ресурсоемкость O(1)
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        if (!contains(o)) return false;
+        @SuppressWarnings("unchecked")
+        Node<T> node = new Node<>((T) o);
+        root = removeNode(root, node);
+        size--;
+        return true;
+    }
+
+    private Node<T> removeNode(Node<T> root, Node<T> t) {
+        if (root == null)
+            return null;
+        if (t.value.compareTo(root.value) > 0)
+            root.right = removeNode(root.right, t);
+        else if (t.value.compareTo(root.value) < 0)
+            root.left = removeNode(root.left, t);
+        else {
+            if (root.left != null && root.right != null) {                            //2
+                Node<T> theSmallest = new Node<>(min(root.right).value);
+                theSmallest.left = root.left;
+                theSmallest.right = root.right;
+                root = theSmallest;
+                root.right = removeNode(root.right, root);
+            } else {
+                if (root.left != null)                                               //1
+                    root = root.left;
+                else root = root.right;
+            }
+        }
+        return root;
+    }
+
+    private Node<T> min(Node<T> root) {
+        return root.left == null ? root : min(root.left);
     }
 
     @Override
@@ -107,39 +139,60 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     }
 
     public class BinaryTreeIterator implements Iterator<T> {
+        private Node<T> current;
+        private Stack<Node<T>> stack = new Stack<>();
+
+        // Трудоемкость - O(n), ресурсоемкость O(n)
 
         private BinaryTreeIterator() {
-            // Добавьте сюда инициализацию, если она необходима
+            current = root;
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
         }
 
         /**
          * Проверка наличия следующего элемента
          * Средняя
          */
+        // Трудоемкость - O(1), ресурсоемкость O(1)
         @Override
         public boolean hasNext() {
-            // TODO
-            throw new NotImplementedError();
+            return (!stack.isEmpty());
         }
+
 
         /**
          * Поиск следующего элемента
          * Средняя
          */
+        // Трудоемкость - O(h), ресурсоемкость O(h)
         @Override
         public T next() {
-            // TODO
-            throw new NotImplementedError();
+            current = stack.pop();
+            Node<T> node = current;
+            if (node == null)
+                throw new NoSuchElementException();
+            if (node.right != null) {
+                node = node.right;
+                while (node != null) {
+                    stack.push(node);
+                    node = node.left;
+                }
+            }
+            return current.value;
         }
 
         /**
          * Удаление следующего элемента
          * Сложная
          */
+        // Трудоемкость - O(h), ресурсоемкость O(1)
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            root = BinaryTree.this.removeNode(root, current);
+            size--;
         }
     }
 

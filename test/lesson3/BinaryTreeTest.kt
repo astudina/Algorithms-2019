@@ -84,6 +84,33 @@ class BinaryTreeTest {
         }
     }
 
+    private fun testRemove_1(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create();
+        assertFalse(binarySet.remove(1))                     // пустое дерево
+
+        val list = mutableListOf<Int>()
+        list.add(2)
+        list.add(7)
+        list.add(5)
+        list.add(1)
+        list.add(6)
+        list.add(9)
+        list.add(5)
+        list.add(11)
+        list.add(4)
+
+        for (element in list) {
+            binarySet += element
+        }
+
+        assertTrue(binarySet.remove(2))                       // просто удаление
+        assertTrue(binarySet.remove(9))
+        assertTrue(binarySet.remove(5))
+
+        assertFalse(binarySet.remove(12))                     // удаляем несуществующий элемент
+        assertFalse(binarySet.remove(123456))
+    }
+
     @Test
     @Tag("Normal")
     fun testRemoveKotlin() {
@@ -94,6 +121,7 @@ class BinaryTreeTest {
     @Tag("Normal")
     fun testRemoveJava() {
         testRemove { createJavaTree() }
+        testRemove_1 { createJavaTree() }
     }
 
     private fun testIterator(create: () -> CheckableSortedSet<Int>) {
@@ -129,6 +157,31 @@ class BinaryTreeTest {
         }
     }
 
+    private fun testIterator_1(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create();
+        val emptyIterator = binarySet.iterator()
+        assertFalse(emptyIterator.hasNext())                                 // пустое дерево
+        val list = mutableListOf<Int>()
+        list.add(2)
+        list.add(7)
+        list.add(5)
+        list.add(6)
+        for (element in list) {
+            binarySet += element
+        }
+        val iterator = binarySet.iterator()
+        for (element in 1 until binarySet.size)
+            iterator.next()
+        assertTrue(iterator.hasNext())                                       // просто проходка
+
+        binarySet.remove(6)
+        binarySet.remove(5)
+        binarySet.remove(7)
+        for (element in binarySet)
+            iterator.next()
+        assertFalse(iterator.hasNext())                                      // проходка для случая, когда след.эл. нет
+    }
+
     @Test
     @Tag("Normal")
     fun testIteratorKotlin() {
@@ -139,6 +192,7 @@ class BinaryTreeTest {
     @Tag("Normal")
     fun testIteratorJava() {
         testIterator { createJavaTree() }
+        testIterator_1 { createJavaTree() }
     }
 
     private fun testIteratorRemove(create: () -> CheckableSortedSet<Int>) {
@@ -186,6 +240,20 @@ class BinaryTreeTest {
         }
     }
 
+    private fun testIteratorRemove_1(create: () -> CheckableSortedSet<Int>) {
+        val binarySet = create()
+        val list = mutableListOf<Int>()
+        list.add(2)
+        list.add(7)
+        for (element in list) {
+            binarySet += element
+        }
+        val iterator = binarySet.iterator()
+        iterator.next()
+        iterator.remove()
+        assertEquals(7, iterator.next())                             // проходка
+    }
+
     @Test
     @Tag("Hard")
     fun testIteratorRemoveKotlin() {
@@ -196,5 +264,6 @@ class BinaryTreeTest {
     @Tag("Hard")
     fun testIteratorRemoveJava() {
         testIteratorRemove { createJavaTree() }
+        testIteratorRemove_1 { createJavaTree() }
     }
 }
