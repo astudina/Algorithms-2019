@@ -75,7 +75,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     // Трудоемкость - O(h) (здесь и далее h - высота дерева), ресурсоемкость O(1)
     @Override
     public boolean remove(Object o) {
-        if (!contains(o)) return false;
+        if (o == null || !contains(o)) return false;
         @SuppressWarnings("unchecked")
         Node<T> node = new Node<>((T) o);
         root = removeNode(root, node);
@@ -142,7 +142,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         private Node<T> current;
         private Stack<Node<T>> stack = new Stack<>();
 
-        // Трудоемкость - O(n), ресурсоемкость O(n)
+        // Трудоемкость - O(h), ресурсоемкость O(h)
 
         private BinaryTreeIterator() {
             current = root;
@@ -171,9 +171,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         @Override
         public T next() {
             current = stack.pop();
-            Node<T> node = current;
-            if (node == null)
+            if (current == null)
                 throw new NoSuchElementException();
+            Node<T> node = current;
             if (node.right != null) {
                 node = node.right;
                 while (node != null) {
@@ -191,7 +191,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         // Трудоемкость - O(h), ресурсоемкость O(1)
         @Override
         public void remove() {
-            root = BinaryTree.this.removeNode(root, current);
+            root = removeNode(root, current);
             size--;
         }
     }
